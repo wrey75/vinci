@@ -933,10 +933,8 @@ PragmaDirective
         -> skip
     ;
 
-Whitespace
-    :   [ \t]+
-        -> skip
-    ;
+// Skip espaces
+Whitespace : [ \t]+ -> skip ;
 
 Newline
     :   (   '\r' '\n'?
