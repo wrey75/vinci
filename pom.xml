@@ -92,6 +92,17 @@
 				</configuration>
 			</plugin>
 
+			<!-- Coverage -->
+			<plugin>
+				<groupId>org.eluder.coveralls</groupId>
+				<artifactId>coveralls-maven-plugin</artifactId>
+				<version>4.3.0</version>
+				<configuration>
+					<repoToken>yourcoverallsprojectrepositorytoken</repoToken>
+				</configuration>
+			</plugin>
+
+
 			<!-- Copy project dependency -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
