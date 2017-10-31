@@ -749,9 +749,7 @@ HexadecimalDigit
 fragment
 IntegerSuffix
     :   UnsignedSuffix LongSuffix?
-    |   UnsignedSuffix LongLongSuffix
     |   LongSuffix UnsignedSuffix?
-    |   LongLongSuffix UnsignedSuffix?
     ;
 
 fragment
@@ -764,10 +762,6 @@ LongSuffix
     :   [lL]
     ;
 
-fragment
-LongLongSuffix
-    :   'll' | 'LL'
-    ;
 
 fragment
 FloatingConstant

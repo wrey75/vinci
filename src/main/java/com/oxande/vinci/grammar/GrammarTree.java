@@ -1,6 +1,6 @@
 package com.oxande.vinci.grammar;
 
-import java.util.Optional;
+import java.math.BigDecimal;
 
 /**
  * The grammar tree is the compilation tree. The grammar tree can be interpreted or directly assembled as virtual machine code or in any language.
@@ -60,7 +60,7 @@ public class GrammarTree {
         this.type = first.type;
         for(int i = 0; i < objects.length; i++ ) {
             if (this.type != objects[i].type) {
-                throw new IllegalArgumentException("The object " + objects[i] + " must have the type " + first.type);
+                throw new IllegalArgumentException("The object " + objects[i] + " must have the type " + first.type + " (not " + objects[i].type +").");
             }
             this.addObject(objects[i]);
         }
@@ -92,8 +92,16 @@ public class GrammarTree {
         return new GrammarTree(OpCode.CONSTANT, VinciClass.INTEGER, (Integer)v );
     }
 
-    public static final GrammarTree getConstFloat(CharSequence v) {
-        return new GrammarTree(OpCode.CONSTANT, VinciClass.FLOAT, v.toString() );
+    public static final GrammarTree getConstInt64(long v) {
+        return new GrammarTree(OpCode.CONSTANT, VinciClass.INT64, (Long)v );
+    }
+
+    public static final GrammarTree getConstNumeric(BigDecimal v) {
+        return new GrammarTree(OpCode.CONSTANT, VinciClass.NUMERIC, v );
+    }
+    
+    public static final GrammarTree getConstFloat(double v) {
+        return new GrammarTree(OpCode.CONSTANT, VinciClass.FLOAT, v );
     }
 
 

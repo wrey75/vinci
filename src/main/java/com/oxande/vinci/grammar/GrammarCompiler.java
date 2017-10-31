@@ -1,9 +1,9 @@
 package com.oxande.vinci.grammar;
 
+import java.math.BigDecimal;
+
 import com.oxande.vinci.antlr4.VinciBaseVisitor;
 import com.oxande.vinci.antlr4.VinciParser;
-import com.oxande.vinci.compiler.VinciCode;
-import com.sun.org.apache.xerces.internal.xni.grammars.Grammar;
 
 public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
 
@@ -14,11 +14,41 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
         return ret;
     }
 
+    // ----------------------- UTILITIES
+    
     private GrammarTree multiplyMinusOne(GrammarTree src){
         GrammarTree minus1 = GrammarTree.getConstInteger(-1);
         GrammarTree[] ops = GrammarTree.castNumeric( minus1, src );
         return new GrammarTree(OpCode.MULTIPLY, ops);
     }
+    
+    private GrammarTree getFromConst(String str){
+    	try {
+    		long v = Long.parseLong(str);
+    		if( v < Integer.MAX_VALUE && v > Integer.MIN_VALUE ){
+    			return GrammarTree.getConstInteger((int)v);
+    		}
+    		else {
+    			return GrammarTree.getConstInt64(v);
+    		}
+    	}
+    	catch(NumberFormatException ex){
+    		// Not a integer...
+    	}
+
+    	try {
+    		double v = Double.parseDouble(str);
+    		return GrammarTree.getConstFloat(v);
+    	}
+    	catch(NumberFormatException ex){
+    		// Not a double...
+    	}
+    	
+   		BigDecimal dec = new BigDecimal(str);
+   		return GrammarTree.getConstNumeric(dec);
+    }
+    
+
 
     // ----------------------- GRAMMAR CODE
 
@@ -86,7 +116,7 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
     public GrammarTree visitPrimaryExpression(VinciParser.PrimaryExpressionContext ctx) {
         if( ctx.Constant() != null ){
             String digits = ctx.Constant().getText();
-            return GrammarTree.getConstInteger(Integer.parseInt(digits));
+            return getFromConst(digits);
         }
         if( ctx.expression() != null ){
             return visitExpression(ctx.expression());
@@ -143,9 +173,9 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
         GrammarTree b = visitCastExpression(ctx.castExpression());
         switch( operator ){
         case '*' :
-            return new GrammarTree(OpCode.MULTIPLY, a, b);
+            return new GrammarTree(OpCode.MULTIPLY, GrammarTree.castNumeric(a, b));
         case '/':
-            return new GrammarTree(OpCode.DIVIDE, a, b);
+            return new GrammarTree(OpCode.DIVIDE, GrammarTree.castNumeric(a, b));
         }
         throw new UnsupportedOperationException("MultiplicativeExpression: not fully supported.");
     }
@@ -172,7 +202,7 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
            /** In this case, we multiply the second expression by -1 */
            b = multiplyMinusOne(b);
         }
-        return new GrammarTree(OpCode.ADD, a, b);
+        return new GrammarTree(OpCode.ADD, GrammarTree.castNumeric(a, b));
     }
 
 }

@@ -7,7 +7,6 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 
-import com.oxande.vinci.compiler.VinciCode;
 import com.oxande.vinci.grammar.GrammarTree;
 
 /**
@@ -120,6 +119,11 @@ public class VinciVirtualMachine implements Runnable {
             var2 =  execute( (GrammarTree)tree.getOperand(1), state );
             var = new VinciVariable(var1.decimalValue().multiply(var2.decimalValue()));
             break;
+        case DIVIDE:
+            var1 =  execute( (GrammarTree)tree.getOperand(0), state );
+            var2 =  execute( (GrammarTree)tree.getOperand(1), state );
+            var = new VinciVariable(var1.decimalValue().divide(var2.decimalValue()));
+            break;
         case CONSTANT:
             switch(tree.getType()){
             case INTEGER:
@@ -132,8 +136,11 @@ public class VinciVirtualMachine implements Runnable {
                 throw new UnsupportedOperationException("Operation CONSTANT not supported for type " + tree.getType());
             }
             break;
+        case CAST_INT_TO_FLOAT:
+        	var = execute( (GrammarTree)tree.getOperand(0), state );
+        	break;
         case PRINTLN:
-            var =  execute( (GrammarTree)tree.getValue(), state );
+            var = execute( (GrammarTree)tree.getValue(), state );
             // Returns the value but print it first.
             println(var);
             break;
