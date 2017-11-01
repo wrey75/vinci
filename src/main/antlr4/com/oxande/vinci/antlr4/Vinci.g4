@@ -37,7 +37,7 @@ grammar Vinci;
 // ------------------------------------------
 
 program
-    : 'println' additiveExpression
+    : statement+
     ;
 
 // ------------------------------------------
@@ -171,13 +171,14 @@ conditionalExpression
 
 assignmentExpression
     :   conditionalExpression
-    |   unaryExpression assignmentOperator assignmentExpression
+    |   op='println' conditionalExpression
+    |   unaryExpression '=' assignmentExpression
     |   DigitSequence // for
     ;
 
-assignmentOperator
-    :   '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|='
-    ;
+// assignmentOperator
+//    :   '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|='
+//    ;
 
 expression
     :   assignmentExpression
@@ -237,19 +238,12 @@ typeSpecifier
     |   'long'
     |   'float'
     |   'double'
-    |   'signed'
-    |   'unsigned'
-    |   '_Bool'
-    |   '_Complex'
-    |   '__m128'
-    |   '__m128d'
-    |   '__m128i')
+    |   'boolean')
     |   '__extension__' '(' ('__m128' | '__m128d' | '__m128i') ')'
     |   atomicTypeSpecifier
     |   structOrUnionSpecifier
     |   enumSpecifier
     |   typedefName
-    |   '__typeof__' '(' constantExpression ')' // GCC extension
     ;
 
 structOrUnionSpecifier
@@ -468,7 +462,7 @@ statement
     |   expressionStatement
     |   selectionStatement
     |   iterationStatement
-    |   jumpStatement
+//    |   jumpStatement
     |   ('__asm' | '__asm__') ('volatile' | '__volatile__') '(' (logicalOrExpression (',' logicalOrExpression)*)? (':' (logicalOrExpression (',' logicalOrExpression)*)?)* ')' ';'
     ;
 

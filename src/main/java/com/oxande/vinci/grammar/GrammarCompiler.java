@@ -1,9 +1,12 @@
 package com.oxande.vinci.grammar;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.oxande.vinci.antlr4.VinciBaseVisitor;
 import com.oxande.vinci.antlr4.VinciParser;
+import com.oxande.vinci.antlr4.VinciParser.StatementContext;
 
 public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
 
@@ -101,7 +104,16 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
 
     public GrammarTree visitAssignmentExpression(VinciParser.AssignmentExpressionContext ctx) {
         if( ctx.conditionalExpression() != null ){
-            return visitConditionalExpression(ctx.conditionalExpression());
+            GrammarTree results = visitConditionalExpression(ctx.conditionalExpression());
+            if( ctx.op != null && ctx.op.getText().equals("println") ){
+            	results = new GrammarTree(OpCode.PRINTLN, results);
+            }
+            return results;
+        }
+        if( ctx.unaryExpression() != null ){
+        	GrammarTree lvalue = visitUnaryExpression(ctx.unaryExpression());
+        	GrammarTree expr = visitAssignmentExpression(ctx.assignmentExpression());
+        	throw new UnsupportedOperationException("AssignmentExpression: assignment '=' not supported.");
         }
         throw new UnsupportedOperationException("AssignmentExpression: not fully supported.");
     }
@@ -179,13 +191,30 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
         }
         throw new UnsupportedOperationException("MultiplicativeExpression: not fully supported.");
     }
+    
+    @Override 
+    public GrammarTree visitExpressionStatement(VinciParser.ExpressionStatementContext ctx) { 
+    	if( ctx.expression() == null ){
+    		return GrammarTree.NOP();
+    	}
+    	return visitExpression(ctx.expression());
+    }
+    
+    @Override
+    public GrammarTree visitStatement(VinciParser.StatementContext ctx) {
+    	if( ctx.expressionStatement() != null ){
+    		return visitExpressionStatement(ctx.expressionStatement());
+    	}
+    	throw new UnsupportedOperationException("MultiplicativeExpression: not fully supported.");
+    }
 
     public GrammarTree visitProgram(VinciParser.ProgramContext ctx) {
-        if( ctx.additiveExpression() != null ){
-            GrammarTree ret = visitAdditiveExpression( ctx.additiveExpression() );
-            return new GrammarTree( OpCode.PRINTLN, ret );
-        }
-        throw new UnsupportedOperationException("Program: not fully supported.");
+    	List<GrammarTree> commands = new ArrayList<>();
+    	for( StatementContext stmt : ctx.statement() ){
+    		GrammarTree ret = visitStatement(stmt);
+    		commands.add(ret);
+    	}
+        return GrammarTree.statements( commands );
     }
 
 

@@ -228,16 +228,6 @@ public interface VinciListener extends ParseTreeListener {
 	 */
 	void exitAssignmentExpression(VinciParser.AssignmentExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link VinciParser#assignmentOperator}.
-	 * @param ctx the parse tree
-	 */
-	void enterAssignmentOperator(VinciParser.AssignmentOperatorContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link VinciParser#assignmentOperator}.
-	 * @param ctx the parse tree
-	 */
-	void exitAssignmentOperator(VinciParser.AssignmentOperatorContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link VinciParser#expression}.
 	 * @param ctx the parse tree
 	 */

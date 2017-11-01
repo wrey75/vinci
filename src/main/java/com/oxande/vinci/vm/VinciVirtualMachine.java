@@ -106,6 +106,7 @@ public class VinciVirtualMachine implements Runnable {
     public VinciVariable execute(GrammarTree tree, VinciState state ){
         GrammarTree op0, op1, op2;
         VinciVariable var0, var1, var2;
+        int n;
 
         VinciVariable var = null;
         switch( tree.getOpCode() ){
@@ -144,6 +145,12 @@ public class VinciVirtualMachine implements Runnable {
             // Returns the value but print it first.
             println(var);
             break;
+        case BLOCK_OF_STATEMENTS:
+        	n = tree.getNumberOfOperands();
+        	for(int i = 0; i < n; i++ ){
+        		var =  execute( (GrammarTree)tree.getOperand(i), state );
+        	}
+        	break;
         default:
             throw new UnsupportedOperationException("Operation code " + tree.getOpCode() + " not supported.");
         }

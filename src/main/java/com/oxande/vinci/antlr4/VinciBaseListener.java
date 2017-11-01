@@ -280,18 +280,6 @@ public class VinciBaseListener implements VinciListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssignmentOperator(VinciParser.AssignmentOperatorContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAssignmentOperator(VinciParser.AssignmentOperatorContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterExpression(VinciParser.ExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}

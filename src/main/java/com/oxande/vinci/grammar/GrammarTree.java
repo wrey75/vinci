@@ -1,6 +1,7 @@
 package com.oxande.vinci.grammar;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * The grammar tree is the compilation tree. The grammar tree can be interpreted or directly assembled as virtual machine code or in any language.
@@ -70,6 +71,17 @@ public class GrammarTree {
         this();
         this.opCode = code;
         addGrammars(objects);
+    }
+    
+    /**
+     * Create a command based on a group of statements.
+     * 
+     * @param list the list of statements
+     * @return the statements
+     */
+    public static final GrammarTree statements(List<GrammarTree> list){
+    	GrammarTree root = new GrammarTree(OpCode.BLOCK_OF_STATEMENTS, list.toArray(new GrammarTree[0]));
+    	return root;
     }
 
     /**
@@ -191,6 +203,10 @@ public class GrammarTree {
 
     public Object getOperand(int i){
         return this.values[i];
+    }
+    
+    public int getNumberOfOperands(){
+    	return this.values.length;
     }
 
     public Object getValue(){

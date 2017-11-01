@@ -143,12 +143,6 @@ public interface VinciVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAssignmentExpression(VinciParser.AssignmentExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link VinciParser#assignmentOperator}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAssignmentOperator(VinciParser.AssignmentOperatorContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link VinciParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
