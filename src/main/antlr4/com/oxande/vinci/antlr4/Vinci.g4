@@ -33,14 +33,6 @@ grammar Vinci;
 
 
 // ------------------------------------------
-// For testing purposes...
-// ------------------------------------------
-
-program
-    : statement+
-    ;
-
-// ------------------------------------------
 
 primaryExpression
     :   Identifier
@@ -527,6 +519,9 @@ jumpStatement
     |   'goto' unaryExpression ';' // GCC extension
     ;
 
+//
+// THIS IS THE ROOT OF THE GRAMMAR
+//
 compilationUnit
     :   translationUnit? EOF
     ;
@@ -538,6 +533,7 @@ translationUnit
 
 externalDeclaration
     :   functionDefinition
+    |  statement ';'
     |   declaration
     |   ';' // stray ;
     ;

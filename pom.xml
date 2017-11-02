@@ -42,7 +42,7 @@
 					<verbose>false</verbose>
 					<showTree>false</showTree>
 					<entryPoint>compilationUnit</entryPoint>
-					<grammarName>C</grammarName>
+					<grammarName>Vinci</grammarName>
 					<packageName></packageName>
 					<exampleFiles>examples/</exampleFiles>
 				</configuration>

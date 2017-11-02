@@ -2,19 +2,22 @@ package com.oxande.vinci.grammar;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.oxande.vinci.antlr4.VinciBaseVisitor;
 import com.oxande.vinci.antlr4.VinciParser;
+import com.oxande.vinci.antlr4.VinciParser.CompilationUnitContext;
 import com.oxande.vinci.antlr4.VinciParser.StatementContext;
 
 public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
 
     private int line;
 
-    private GrammarTree empty(){
-        GrammarTree ret = GrammarTree.NOP();
-        return ret;
+    
+    public GrammarTree compileProgram(VinciParser parser){
+        GrammarTree rootTree = parser.compilationUnit().accept(this);
+        return rootTree;
     }
 
     // ----------------------- UTILITIES
@@ -208,13 +211,47 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
     	throw new UnsupportedOperationException("MultiplicativeExpression: not fully supported.");
     }
 
-    public GrammarTree visitProgram(VinciParser.ProgramContext ctx) {
-    	List<GrammarTree> commands = new ArrayList<>();
-    	for( StatementContext stmt : ctx.statement() ){
-    		GrammarTree ret = visitStatement(stmt);
-    		commands.add(ret);
+  
+    
+    @Override 
+    public GrammarTree visitExternalDeclaration(VinciParser.ExternalDeclarationContext ctx) {
+    	if( ctx.functionDefinition() != null ){
+    		throw new UnsupportedOperationException("The declaration of functions not yet supported.");
+    		// return visitFunctionDefinition(ctx.functionDefinition());
     	}
-        return GrammarTree.statements( commands );
+    	if( ctx.statement() != null ){
+    		return visitStatement(ctx.statement());
+    	}
+    	if( ctx.declaration() != null ){
+    		return visitDeclaration(ctx.declaration());
+    	}
+    	return GrammarTree.NOP(); 
+    }
+	
+    @Override 
+    public GrammarTree visitTranslationUnit(VinciParser.TranslationUnitContext ctx) {
+    	GrammarTree first = null;
+    	if(ctx.translationUnit() != null){
+    		first = visitTranslationUnit(ctx.translationUnit());
+    	}
+    	GrammarTree last = visitExternalDeclaration(ctx.externalDeclaration());
+    	return GrammarTree.statements(Arrays.asList(first, last));
+    }
+	
+    
+    @Override
+    public GrammarTree visitCompilationUnit(CompilationUnitContext ctx) {
+    	if( ctx.translationUnit() != null){
+    		return visitTranslationUnit(ctx.translationUnit());
+    	}
+    	return GrammarTree.NOP();
+    	
+//    	List<GrammarTree> commands = new ArrayList<>();
+//    	for( StatementContext stmt : ctx.statement() ){
+//    		GrammarTree ret = visitStatement(stmt);
+//    		commands.add(ret);
+//    	}
+//        return GrammarTree.statements( commands );
     }
 
 

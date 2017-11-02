@@ -1,4 +1,4 @@
-// Generated from com/oxande/vinci/antlr4/Vinci.g4 by ANTLR 4.7
+// Generated from com\oxande\vinci\antlr4\Vinci.g4 by ANTLR 4.7
 package com.oxande.vinci.antlr4;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -10,12 +10,6 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  * operations with no return type.
  */
 public interface VinciVisitor<T> extends ParseTreeVisitor<T> {
-	/**
-	 * Visit a parse tree produced by {@link VinciParser#program}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitProgram(VinciParser.ProgramContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link VinciParser#primaryExpression}.
 	 * @param ctx the parse tree

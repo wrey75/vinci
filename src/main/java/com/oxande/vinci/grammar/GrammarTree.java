@@ -1,13 +1,18 @@
 package com.oxande.vinci.grammar;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * The grammar tree is the compilation tree. The grammar tree can be interpreted or directly assembled as virtual machine code or in any language.
  */
 public class GrammarTree {
 
+	
     public GrammarTree(OpCode code, VinciClass clazz, Object object) {
         this();
         this.opCode = code;
@@ -37,7 +42,6 @@ public class GrammarTree {
     }
 
     public GrammarTree() {
-
     }
 
 //    /**
@@ -80,7 +84,19 @@ public class GrammarTree {
      * @return the statements
      */
     public static final GrammarTree statements(List<GrammarTree> list){
-    	GrammarTree root = new GrammarTree(OpCode.BLOCK_OF_STATEMENTS, list.toArray(new GrammarTree[0]));
+    	GrammarTree[] array = list.stream()
+    			.filter(Objects::nonNull)
+    			.toArray(GrammarTree[]::new);
+
+    	if( array.length == 1 ){
+    		return array[0];
+    	}
+    	
+    	if( array.length == 0 ){
+    		return GrammarTree.NOP();
+    	}
+    	
+    	GrammarTree root = new GrammarTree(OpCode.BLOCK_OF_STATEMENTS, array);
     	return root;
     }
 

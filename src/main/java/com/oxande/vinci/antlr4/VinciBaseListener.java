@@ -1,4 +1,4 @@
-// Generated from com/oxande/vinci/antlr4/Vinci.g4 by ANTLR 4.7
+// Generated from com\oxande\vinci\antlr4\Vinci.g4 by ANTLR 4.7
 package com.oxande.vinci.antlr4;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -11,18 +11,6 @@ import org.antlr.v4.runtime.tree.TerminalNode;
  * of the available methods.
  */
 public class VinciBaseListener implements VinciListener {
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterProgram(VinciParser.ProgramContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitProgram(VinciParser.ProgramContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

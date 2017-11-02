@@ -1,4 +1,4 @@
-// Generated from com/oxande/vinci/antlr4/Vinci.g4 by ANTLR 4.7
+// Generated from com\oxande\vinci\antlr4\Vinci.g4 by ANTLR 4.7
 package com.oxande.vinci.antlr4;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -7,16 +7,6 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  * {@link VinciParser}.
  */
 public interface VinciListener extends ParseTreeListener {
-	/**
-	 * Enter a parse tree produced by {@link VinciParser#program}.
-	 * @param ctx the parse tree
-	 */
-	void enterProgram(VinciParser.ProgramContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link VinciParser#program}.
-	 * @param ctx the parse tree
-	 */
-	void exitProgram(VinciParser.ProgramContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link VinciParser#primaryExpression}.
 	 * @param ctx the parse tree

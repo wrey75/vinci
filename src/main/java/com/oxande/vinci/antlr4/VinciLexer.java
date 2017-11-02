@@ -1,4 +1,4 @@
-// Generated from com/oxande/vinci/antlr4/Vinci.g4 by ANTLR 4.7
+// Generated from com\oxande\vinci\antlr4\Vinci.g4 by ANTLR 4.7
 package com.oxande.vinci.antlr4;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;

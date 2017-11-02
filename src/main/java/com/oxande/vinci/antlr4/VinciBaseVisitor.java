@@ -1,4 +1,4 @@
-// Generated from com/oxande/vinci/antlr4/Vinci.g4 by ANTLR 4.7
+// Generated from com\oxande\vinci\antlr4\Vinci.g4 by ANTLR 4.7
 package com.oxande.vinci.antlr4;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
@@ -11,13 +11,6 @@ import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
  * operations with no return type.
  */
 public class VinciBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements VinciVisitor<T> {
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitProgram(VinciParser.ProgramContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

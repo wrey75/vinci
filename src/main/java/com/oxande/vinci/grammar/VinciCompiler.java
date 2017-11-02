@@ -38,7 +38,7 @@ public class VinciCompiler {
         VinciParser parser = new VinciParser(tokens);
 
         GrammarCompiler programListener = new GrammarCompiler();
-        GrammarTree tree = parser.program().accept(programListener);
+        GrammarTree tree = programListener.compileProgram(parser);
         return tree;
     }
 }
