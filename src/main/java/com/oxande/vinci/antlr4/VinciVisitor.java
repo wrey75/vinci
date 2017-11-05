@@ -17,24 +17,6 @@ public interface VinciVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPrimaryExpression(VinciParser.PrimaryExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link VinciParser#genericSelection}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitGenericSelection(VinciParser.GenericSelectionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link VinciParser#genericAssocList}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitGenericAssocList(VinciParser.GenericAssocListContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link VinciParser#genericAssociation}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitGenericAssociation(VinciParser.GenericAssociationContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link VinciParser#postfixExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

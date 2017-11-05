@@ -18,36 +18,6 @@ public interface VinciListener extends ParseTreeListener {
 	 */
 	void exitPrimaryExpression(VinciParser.PrimaryExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link VinciParser#genericSelection}.
-	 * @param ctx the parse tree
-	 */
-	void enterGenericSelection(VinciParser.GenericSelectionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link VinciParser#genericSelection}.
-	 * @param ctx the parse tree
-	 */
-	void exitGenericSelection(VinciParser.GenericSelectionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link VinciParser#genericAssocList}.
-	 * @param ctx the parse tree
-	 */
-	void enterGenericAssocList(VinciParser.GenericAssocListContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link VinciParser#genericAssocList}.
-	 * @param ctx the parse tree
-	 */
-	void exitGenericAssocList(VinciParser.GenericAssocListContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link VinciParser#genericAssociation}.
-	 * @param ctx the parse tree
-	 */
-	void enterGenericAssociation(VinciParser.GenericAssociationContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link VinciParser#genericAssociation}.
-	 * @param ctx the parse tree
-	 */
-	void exitGenericAssociation(VinciParser.GenericAssociationContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link VinciParser#postfixExpression}.
 	 * @param ctx the parse tree
 	 */

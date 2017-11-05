@@ -39,9 +39,10 @@ primaryExpression
     |   Constant
     |   StringLiteral+
     |   '(' expression ')'
-    |   genericSelection
+//     |   genericSelection
     ;
 
+/*
 genericSelection
     :   '_Generic' '(' assignmentExpression ',' genericAssocList ')'
     ;
@@ -55,6 +56,7 @@ genericAssociation
     :   typeName ':' assignmentExpression
     |   'default' ':' assignmentExpression
     ;
+*/
 
 postfixExpression
     :   primaryExpression
