@@ -128,8 +128,8 @@ relationalExpression
 
 equalityExpression
     :   relationalExpression
-    |   equalityExpression '==' relationalExpression
-    |   equalityExpression '!=' relationalExpression
+    |   equalityExpression op='==' relationalExpression
+    |   equalityExpression op='!=' relationalExpression
     ;
 
 andExpression
@@ -533,7 +533,7 @@ translationUnit
 
 externalDeclaration
     :   functionDefinition
-    |  statement ';'
+    |  statement
     |   declaration
     |   ';' // stray ;
     ;

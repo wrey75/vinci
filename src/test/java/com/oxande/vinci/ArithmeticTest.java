@@ -6,9 +6,7 @@ import org.junit.Test;
 
 public class ArithmeticTest extends AbstractRunner {
 
-    private void check( String expected, String actual ){
-        assertEquals( expected.trim(), actual.trim() );
-    }
+
 
     @Test
     public void addTest() throws Exception {
@@ -26,9 +24,9 @@ public class ArithmeticTest extends AbstractRunner {
     @Test
     public void multiplyTest() throws Exception {
         check( "42", basicRun("println 6 * 7 ;"));
-        check( "35.7", basicRun("println 5.1 * 7 ;"));
-        check( "1.00", basicRun("println 0.1 * 10.0 ;"));
+        check( "1.25", basicRun("println 0.125 * 10.0 ;"));
         check( "1.0", basicRun("println 0.1 * 10 ;"));
+        check( "35.875", basicRun("println 5.125 * 7 ;"));
     }
     
     @Test
@@ -41,6 +39,6 @@ public class ArithmeticTest extends AbstractRunner {
     @Test
     public void parenthesisTest() throws Exception {
         check( "36", basicRun("println ( 3 + 1 ) *9; "));
-        check( "-12.3", basicRun("println ( 3.1 + 1 ) * -3; "));
+        check( "-12.375", basicRun("println ( 3.125 + 1 ) * -3; "));
     }
 }

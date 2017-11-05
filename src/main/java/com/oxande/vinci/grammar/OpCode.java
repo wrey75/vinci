@@ -4,17 +4,26 @@ public enum OpCode {
     CONSTANT, // Load a constant. Note the type must be defined.
     CAST_INT_TO_FLOAT,
     CAST_FLOAT_TO_INT,
+    NOP, // No operation
+    PRINTLN, // To print something
+
+    // Operators
     MULTIPLY,
     DIVIDE,
     ADD,
-    SUBSTRACT, // Not sure when have to use
-    NOP, // No operation
-    BOOLEAN_OR,
-    BOOLEAN_AND,
+    // SUBSTRACT is not used, we simply multiply the value by -1 
+    
+    // Binary op
     BINARY_OR,
     BINARY_XOR,
-    PRINTLN, // To print something
-
+    BINARY_AND,
+    
+    // Booleans
+    BOOLEAN_OR,
+    BOOLEAN_AND,
+    BOOLEAN_NOT,
+    EQUALS,
+    
     // Storage
     STORE,
     LOAD,

@@ -14,6 +14,12 @@ import org.junit.Assert;
 
 public abstract class AbstractRunner {
 
+	
+	protected void check( String expected, String actual ){
+        assertEquals( expected.trim(), actual.trim() );
+    }
+	
+	
     /**
      * A basic test.
      *

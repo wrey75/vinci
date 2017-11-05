@@ -120,9 +120,9 @@ public class GrammarTree {
         return new GrammarTree(OpCode.CONSTANT, VinciClass.INTEGER, (Integer)v );
     }
 
-    public static final GrammarTree getConstInt64(long v) {
-        return new GrammarTree(OpCode.CONSTANT, VinciClass.INT64, (Long)v );
-    }
+//    public static final GrammarTree getConstInt64(long v) {
+//        return new GrammarTree(OpCode.CONSTANT, VinciClass.INT64, (Long)v );
+//    }
 
     public static final GrammarTree getConstNumeric(BigDecimal v) {
         return new GrammarTree(OpCode.CONSTANT, VinciClass.NUMERIC, v );

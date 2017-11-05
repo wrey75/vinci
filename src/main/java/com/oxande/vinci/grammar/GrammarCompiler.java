@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.antlr.v4.runtime.Token;
+
 import com.oxande.vinci.antlr4.VinciBaseVisitor;
 import com.oxande.vinci.antlr4.VinciParser;
 import com.oxande.vinci.antlr4.VinciParser.CompilationUnitContext;
+import com.oxande.vinci.antlr4.VinciParser.EqualityExpressionContext;
 import com.oxande.vinci.antlr4.VinciParser.StatementContext;
 
 public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
@@ -35,7 +38,8 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
     			return GrammarTree.getConstInteger((int)v);
     		}
     		else {
-    			return GrammarTree.getConstInt64(v);
+    			throw new UnsupportedOperationException("64 bits integers not supported yet.");
+    			// return GrammarTree.getConstInt64(v);
     		}
     	}
     	catch(NumberFormatException ex){
@@ -58,6 +62,50 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
 
     // ----------------------- GRAMMAR CODE
 
+    @Override 
+    public GrammarTree visitShiftExpression(VinciParser.ShiftExpressionContext ctx) { 
+    	GrammarTree addExpr = visitAdditiveExpression(ctx.additiveExpression());
+    	if( ctx.shiftExpression() != null ){
+    		throw new UnsupportedOperationException("shiftExpression not yet supported.");
+    	}
+    	return addExpr;
+    }
+	
+    @Override 
+    public GrammarTree visitRelationalExpression(VinciParser.RelationalExpressionContext ctx) { 
+    	GrammarTree shiftExpr = visitShiftExpression(ctx.shiftExpression());
+    	if( ctx.relationalExpression() != null ){
+    		throw new UnsupportedOperationException("relationalExpression not yet supported.");
+    	}
+    	return shiftExpr;
+    }
+    
+    @Override 
+    public GrammarTree visitEqualityExpression(VinciParser.EqualityExpressionContext ctx) { 
+    	GrammarTree rel = visitRelationalExpression(ctx.relationalExpression());
+    	if( ctx.equalityExpression() != null ){
+    		GrammarTree eq = visitEqualityExpression(ctx.equalityExpression());
+    		GrammarTree equals = new GrammarTree(OpCode.EQUALS, eq, rel);
+    		String oper = ctx.op.getText();
+    		if(oper.equals("!=")){
+    			return new GrammarTree(OpCode.BOOLEAN_NOT, equals);
+    		}
+    		return equals;
+    	}
+    	return rel;
+    }
+	
+    @Override 
+    public GrammarTree visitAndExpression(VinciParser.AndExpressionContext ctx) { 
+    	GrammarTree eqExpr = visitEqualityExpression(ctx.equalityExpression());
+    	if( ctx.andExpression() != null ){
+    		GrammarTree andExpr = visitAndExpression(ctx.andExpression());
+    		return new GrammarTree(OpCode.BINARY_AND, andExpr, eqExpr);
+    	}
+    	return eqExpr;
+    }
+    
+    @Override
     public GrammarTree visitExclusiveOrExpression(VinciParser.ExclusiveOrExpressionContext ctx) {
         GrammarTree and = visitAndExpression(ctx.andExpression());
         if( ctx.exclusiveOrExpression() != null ){
@@ -67,6 +115,7 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
         return and;
     }
 
+    @Override
     public GrammarTree visitInclusiveOrExpression(VinciParser.InclusiveOrExpressionContext ctx) {
         GrammarTree excl = visitExclusiveOrExpression(ctx.exclusiveOrExpression());
         if( ctx.inclusiveOrExpression() != null ){
