@@ -10,7 +10,6 @@ import java.nio.charset.StandardCharsets;
 
 import com.oxande.vinci.grammar.GrammarTree;
 import com.oxande.vinci.grammar.VinciCompiler;
-import com.oxande.vinci.compiler.VinciCode;
 import com.oxande.vinci.vm.VinciVirtualMachine;
 
 public class Vinci {

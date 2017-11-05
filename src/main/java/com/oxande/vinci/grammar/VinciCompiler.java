@@ -13,7 +13,7 @@ import org.antlr.v4.runtime.TokenStream;
 import com.oxande.vinci.antlr4.VinciLexer;
 import com.oxande.vinci.antlr4.VinciParser;
 import com.oxande.vinci.lexer.PreprocessorReader;
-import com.oxande.vinci.compiler.VinciCode;
+
 
 /**
  * Interpret the source (basically, the source can be anything).
