@@ -152,6 +152,11 @@ public class VinciVirtualMachine implements Runnable {
 			// Returns the value but print it first.
 			println(var);
 			break;
+		case BOOLEAN_NOT:
+			var1 = execute((GrammarTree) tree.getValue(), state);
+			var = VinciVariable.fromBoolean(!var1.booleanValue());
+			break;
+			
 		case BLOCK_OF_STATEMENTS:
 			n = tree.getNumberOfOperands();
 			for (int i = 0; i < n; i++) {

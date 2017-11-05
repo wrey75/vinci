@@ -85,7 +85,8 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
     	GrammarTree rel = visitRelationalExpression(ctx.relationalExpression());
     	if( ctx.equalityExpression() != null ){
     		GrammarTree eq = visitEqualityExpression(ctx.equalityExpression());
-    		GrammarTree equals = new GrammarTree(OpCode.EQUALS, eq, rel);
+    		GrammarTree[] cast = GrammarTree.castNumeric(eq, rel);
+    		GrammarTree equals = new GrammarTree(OpCode.EQUALS, cast[0], cast[1]);
     		String oper = ctx.op.getText();
     		if(oper.equals("!=")){
     			return new GrammarTree(OpCode.BOOLEAN_NOT, equals);

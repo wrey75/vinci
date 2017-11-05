@@ -43,6 +43,14 @@ public class VinciVariable {
         return numericValue.doubleValue();
     }
     
+    
+    public boolean booleanValue(){
+        if( this.type != VinciClass.BOOLEAN ){
+            throw new IllegalStateException("Not a BOOLEAN value.");
+        }
+        return boolValue;
+    }
+    
     public int intValue(){
         if( this.type != VinciClass.INTEGER ){
             throw new IllegalStateException("Not a INTEGER value.");
