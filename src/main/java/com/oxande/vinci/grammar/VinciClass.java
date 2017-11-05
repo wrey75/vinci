@@ -10,5 +10,6 @@ public enum VinciClass {
     
     VOID, // No type
     OBJECT, // Object
+    STRING, // A String
 }
 

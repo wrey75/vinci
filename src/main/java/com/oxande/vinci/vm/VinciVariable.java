@@ -15,6 +15,12 @@ public class VinciVariable {
     	this.type = type;
     }
     
+    public static VinciVariable fromString(CharSequence v){
+    	VinciVariable self = new VinciVariable(VinciClass.STRING);
+        self.stringValue = v.toString();
+        return self;
+    }
+    
     public static VinciVariable fromFloat(double v){
     	VinciVariable self = new VinciVariable(VinciClass.FLOAT);
         self.numericValue = new BigDecimal(v);

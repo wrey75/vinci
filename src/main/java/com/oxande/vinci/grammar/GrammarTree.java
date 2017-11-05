@@ -119,6 +119,10 @@ public class GrammarTree {
     public static final GrammarTree getConstInteger(int v) {
         return new GrammarTree(OpCode.CONSTANT, VinciClass.INTEGER, (Integer)v );
     }
+    
+    public static final GrammarTree getConstString(CharSequence str) {
+        return new GrammarTree(OpCode.CONSTANT, VinciClass.STRING, str.toString() );
+    }
 
 //    public static final GrammarTree getConstInt64(long v) {
 //        return new GrammarTree(OpCode.CONSTANT, VinciClass.INT64, (Long)v );

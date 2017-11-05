@@ -111,74 +111,80 @@ public class VinciVirtualMachine implements Runnable {
 
 		VinciVariable var = null;
 		switch (tree.getOpCode()) {
-		case ADD:
-			var1 = execute((GrammarTree) tree.getOperand(0), state);
-			var2 = execute((GrammarTree) tree.getOperand(1), state);
-			var = var1.add(var2);
-			break;
-		case MULTIPLY:
-			var1 = execute((GrammarTree) tree.getOperand(0), state);
-			var2 = execute((GrammarTree) tree.getOperand(1), state);
-			var = var1.multiply(var2);
-			break;
-		case DIVIDE:
-			var1 = execute((GrammarTree) tree.getOperand(0), state);
-			var2 = execute((GrammarTree) tree.getOperand(1), state);
-			var = var1.divide(var2);
-			break;
-			
-		case EQUALS:
-			var1 = execute((GrammarTree) tree.getOperand(0), state);
-			var2 = execute((GrammarTree) tree.getOperand(1), state);
-			var = VinciVariable.fromBoolean( var1.compare(var2) == 0 );
-			break;
-			
-		case BELOW:
-			var1 = execute((GrammarTree) tree.getOperand(0), state);
-			var2 = execute((GrammarTree) tree.getOperand(1), state);
-			var = VinciVariable.fromBoolean( var1.compare(var2) < 0 );
-			break;
-			
-		case BELOW_OR_EQUALS:
-			var1 = execute((GrammarTree) tree.getOperand(0), state);
-			var2 = execute((GrammarTree) tree.getOperand(1), state);
-			var = VinciVariable.fromBoolean( var1.compare(var2) <= 0 );
-			break;
-			
-		case CONSTANT:
-			switch (tree.getType()) {
-			case INTEGER:
-				var = VinciVariable.fromInteger((int) tree.getValue());
+			case ADD:
+				var1 = execute((GrammarTree) tree.getOperand(0), state);
+				var2 = execute((GrammarTree) tree.getOperand(1), state);
+				var = var1.add(var2);
 				break;
-			case FLOAT:
-				var = VinciVariable.fromFloat((double)tree.getValue());
+			case MULTIPLY:
+				var1 = execute((GrammarTree) tree.getOperand(0), state);
+				var2 = execute((GrammarTree) tree.getOperand(1), state);
+				var = var1.multiply(var2);
+				break;
+			case DIVIDE:
+				var1 = execute((GrammarTree) tree.getOperand(0), state);
+				var2 = execute((GrammarTree) tree.getOperand(1), state);
+				var = var1.divide(var2);
+				break;
+
+			case EQUALS:
+				var1 = execute((GrammarTree) tree.getOperand(0), state);
+				var2 = execute((GrammarTree) tree.getOperand(1), state);
+				var = VinciVariable.fromBoolean(var1.compare(var2) == 0);
+				break;
+
+			case BELOW:
+				var1 = execute((GrammarTree) tree.getOperand(0), state);
+				var2 = execute((GrammarTree) tree.getOperand(1), state);
+				var = VinciVariable.fromBoolean(var1.compare(var2) < 0);
+				break;
+
+			case BELOW_OR_EQUALS:
+				var1 = execute((GrammarTree) tree.getOperand(0), state);
+				var2 = execute((GrammarTree) tree.getOperand(1), state);
+				var = VinciVariable.fromBoolean(var1.compare(var2) <= 0);
+				break;
+
+			case CONSTANT:
+				switch (tree.getType()) {
+					case INTEGER:
+						var = VinciVariable.fromInteger((int) tree.getValue());
+						break;
+					case FLOAT:
+						var = VinciVariable.fromFloat((double) tree.getValue());
+						break;
+					case STRING:
+						var = VinciVariable.fromString((CharSequence)tree.getValue());
+						break;
+					default:
+						throw new UnsupportedOperationException(
+								"Operation CONSTANT not supported for type " + tree.getType());
+				}
+				break;
+
+			case CAST_INT_TO_FLOAT:
+				var1 = execute((GrammarTree) tree.getOperand(0), state);
+				var = VinciVariable.fromFloat(var1.intValue());
+				break;
+			case PRINTLN:
+				var = execute((GrammarTree) tree.getValue(), state);
+				// Returns the value but print it first.
+				println(var);
+				break;
+				
+			case BOOLEAN_NOT:
+				var1 = execute((GrammarTree) tree.getValue(), state);
+				var = VinciVariable.fromBoolean(!var1.booleanValue());
+				break;
+
+			case BLOCK_OF_STATEMENTS:
+				n = tree.getNumberOfOperands();
+				for (int i = 0; i < n; i++) {
+					var = execute((GrammarTree) tree.getOperand(i), state);
+				}
 				break;
 			default:
-				throw new UnsupportedOperationException("Operation CONSTANT not supported for type " + tree.getType());
-			}
-			break;
-		case CAST_INT_TO_FLOAT:
-			var1 = execute((GrammarTree) tree.getOperand(0), state);
-			var = VinciVariable.fromFloat(var1.intValue());
-			break;
-		case PRINTLN:
-			var = execute((GrammarTree) tree.getValue(), state);
-			// Returns the value but print it first.
-			println(var);
-			break;
-		case BOOLEAN_NOT:
-			var1 = execute((GrammarTree) tree.getValue(), state);
-			var = VinciVariable.fromBoolean(!var1.booleanValue());
-			break;
-			
-		case BLOCK_OF_STATEMENTS:
-			n = tree.getNumberOfOperands();
-			for (int i = 0; i < n; i++) {
-				var = execute((GrammarTree) tree.getOperand(i), state);
-			}
-			break;
-		default:
-			throw new UnsupportedOperationException("Operation code " + tree.getOpCode() + " not supported.");
+				throw new UnsupportedOperationException("Operation code " + tree.getOpCode() + " not supported.");
 		}
 		tree.covered();
 		return var;

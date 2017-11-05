@@ -6,12 +6,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.oxande.vinci.antlr4.VinciBaseVisitor;
 import com.oxande.vinci.antlr4.VinciParser;
 import com.oxande.vinci.antlr4.VinciParser.CompilationUnitContext;
-import com.oxande.vinci.antlr4.VinciParser.EqualityExpressionContext;
-import com.oxande.vinci.antlr4.VinciParser.StatementContext;
+import com.oxande.vinci.util.Assert;
 
 public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
 
@@ -205,6 +205,16 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
         }
         if( ctx.expression() != null ){
             return visitExpression(ctx.expression());
+        }
+        if( ctx.StringLiteral() != null ){
+        	StringBuilder buf = new StringBuilder();
+        	for( TerminalNode node : ctx.StringLiteral() ){
+        		String text = node.getText();
+        		Assert.isTrue(text.charAt(0) == '"');
+        		Assert.isTrue(text.charAt(text.length()-1) == '"');
+            	buf.append(text.substring(1, text.length() - 1));
+        	}
+        	return GrammarTree.getConstString(buf);
         }
         throw new UnsupportedOperationException("PrimaryExpression: not fully supported.");
     }

@@ -6,4 +6,10 @@ public final class Assert {
 			throw new IllegalArgumentException("Argument '"+name+"' MUST NOT be null.");
 		}
 	}
+	
+	public static void isTrue(boolean expr){
+		if( !expr ){
+			throw new IllegalStateException("We have found an error.");
+		}
+	}
 }
