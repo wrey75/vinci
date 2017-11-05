@@ -1,6 +1,8 @@
 
 [![Build Status](https://travis-ci.org/wrey75/vinci.svg?branch=master)](https://travis-ci.org/wrey75/vinci)
 [![Coverage Status](https://coveralls.io/repos/github/wrey75/vinci/badge.svg?branch=master)](https://coveralls.io/github/wrey75/vinci?branch=master)
+[![Known Vulnerabilities](https://snyk.io/test/github/wrey75/vinci/badge.svg)](https://snyk.io/test/github/wrey75/vinci)
+
 # vinci
 
 Another C-like language. The Vinci language is like JAVA or C, based on algorithmic
