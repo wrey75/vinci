@@ -23,6 +23,9 @@ public enum OpCode {
     BOOLEAN_AND,
     BOOLEAN_NOT,
     EQUALS,
+    BELOW,
+    BELOW_OR_EQUALS,
+    
     
     // Storage
     STORE,

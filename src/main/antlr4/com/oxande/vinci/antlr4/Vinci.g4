@@ -120,10 +120,10 @@ shiftExpression
 
 relationalExpression
     :   shiftExpression
-    |   relationalExpression '<' shiftExpression
-    |   relationalExpression '>' shiftExpression
-    |   relationalExpression '<=' shiftExpression
-    |   relationalExpression '>=' shiftExpression
+    |   relationalExpression op='<' shiftExpression
+    |   relationalExpression op='>' shiftExpression
+    |   relationalExpression op='<=' shiftExpression
+    |   relationalExpression op='>=' shiftExpression
     ;
 
 equalityExpression

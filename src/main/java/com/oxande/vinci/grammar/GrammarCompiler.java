@@ -71,11 +71,31 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
     	return addExpr;
     }
 	
-    @Override 
+    @Override
     public GrammarTree visitRelationalExpression(VinciParser.RelationalExpressionContext ctx) { 
     	GrammarTree shiftExpr = visitShiftExpression(ctx.shiftExpression());
     	if( ctx.relationalExpression() != null ){
-    		throw new UnsupportedOperationException("relationalExpression not yet supported.");
+    		GrammarTree relExpr = visitRelationalExpression(ctx.relationalExpression());
+    		GrammarTree[] cast = GrammarTree.castNumeric(relExpr, shiftExpr);
+    		String oper = ctx.op.getText();
+    		GrammarTree results = null;
+    		switch(oper){
+    			case "<" :
+    				results = new GrammarTree(OpCode.BELOW, cast[0], cast[1]);
+    				break;
+    			case "<=" :
+    				results = new GrammarTree(OpCode.BELOW_OR_EQUALS, cast[0], cast[1]);
+    				break;
+    			case ">" :
+    				results = new GrammarTree(OpCode.BOOLEAN_NOT,
+    						new GrammarTree(OpCode.BELOW_OR_EQUALS, cast[0], cast[1]));
+    				break;
+    			case ">=" :
+    				results = new GrammarTree(OpCode.BOOLEAN_NOT,
+    						new GrammarTree(OpCode.BELOW, cast[0], cast[1]));
+    				break;
+    		}
+    		return results;
     	}
     	return shiftExpr;
     }

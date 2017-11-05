@@ -1432,6 +1432,7 @@ public class VinciParser extends Parser {
 	}
 
 	public static class RelationalExpressionContext extends ParserRuleContext {
+		public Token op;
 		public ShiftExpressionContext shiftExpression() {
 			return getRuleContext(ShiftExpressionContext.class,0);
 		}
@@ -1495,7 +1496,7 @@ public class VinciParser extends Parser {
 						setState(370);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
 						setState(371);
-						match(Less);
+						((RelationalExpressionContext)_localctx).op = match(Less);
 						setState(372);
 						shiftExpression(0);
 						}
@@ -1507,7 +1508,7 @@ public class VinciParser extends Parser {
 						setState(373);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
 						setState(374);
-						match(Greater);
+						((RelationalExpressionContext)_localctx).op = match(Greater);
 						setState(375);
 						shiftExpression(0);
 						}
@@ -1519,7 +1520,7 @@ public class VinciParser extends Parser {
 						setState(376);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
 						setState(377);
-						match(LessEqual);
+						((RelationalExpressionContext)_localctx).op = match(LessEqual);
 						setState(378);
 						shiftExpression(0);
 						}
@@ -1531,7 +1532,7 @@ public class VinciParser extends Parser {
 						setState(379);
 						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
 						setState(380);
-						match(GreaterEqual);
+						((RelationalExpressionContext)_localctx).op = match(GreaterEqual);
 						setState(381);
 						shiftExpression(0);
 						}

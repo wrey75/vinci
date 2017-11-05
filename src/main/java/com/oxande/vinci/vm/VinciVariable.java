@@ -131,12 +131,7 @@ public class VinciVariable {
     }
     
     
-    /**
-     * Compare 2 values and returns a boolean for the comparison. 
-     * 
-     * @param other another VinciVariable.
-     */
-    public boolean equalsTo( VinciVariable other ){
+    public int compare( VinciVariable other ){
     	Assert.notNull(other, "other");
     	if( this.type != other.type ){
     		throw new UnsupportedOperationException("Trying compare between " + this.type + " and " + other.type + " (expected the same types).");
@@ -147,11 +142,12 @@ public class VinciVariable {
     		// case INT64:
     		case FLOAT:
     		case NUMERIC:
-    			return this.numericValue.equals(other.numericValue);
+    			return this.numericValue.compareTo(other.numericValue);
 
     	}
 		throw new UnsupportedOperationException("Not supported for type " + this.type);
     }
+    
     
     public String toString(){
     	return this.stringValue;

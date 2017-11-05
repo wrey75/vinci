@@ -126,11 +126,25 @@ public class VinciVirtualMachine implements Runnable {
 			var2 = execute((GrammarTree) tree.getOperand(1), state);
 			var = var1.divide(var2);
 			break;
+			
 		case EQUALS:
 			var1 = execute((GrammarTree) tree.getOperand(0), state);
 			var2 = execute((GrammarTree) tree.getOperand(1), state);
-			var = VinciVariable.fromBoolean( var1.equalsTo(var2) );
+			var = VinciVariable.fromBoolean( var1.compare(var2) == 0 );
 			break;
+			
+		case BELOW:
+			var1 = execute((GrammarTree) tree.getOperand(0), state);
+			var2 = execute((GrammarTree) tree.getOperand(1), state);
+			var = VinciVariable.fromBoolean( var1.compare(var2) < 0 );
+			break;
+			
+		case BELOW_OR_EQUALS:
+			var1 = execute((GrammarTree) tree.getOperand(0), state);
+			var2 = execute((GrammarTree) tree.getOperand(1), state);
+			var = VinciVariable.fromBoolean( var1.compare(var2) <= 0 );
+			break;
+			
 		case CONSTANT:
 			switch (tree.getType()) {
 			case INTEGER:
