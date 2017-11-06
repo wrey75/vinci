@@ -8,7 +8,6 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import com.oxande.vinci.antlr4.VinciBaseVisitor;
 import com.oxande.vinci.antlr4.VinciParser;
 import com.oxande.vinci.antlr4.VinciParser.CompilationUnitContext;
-import com.oxande.vinci.util.Assert;
 import com.oxande.vinci.util.VinciUtils;
 
 public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
@@ -215,9 +214,7 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
         	StringBuilder buf = new StringBuilder();
         	for( TerminalNode node : ctx.StringLiteral() ){
         		String text = node.getText();
-        		Assert.isTrue(text.charAt(0) == '"');
-        		Assert.isTrue(text.charAt(text.length()-1) == '"');
-            	buf.append(text.substring(1, text.length() - 1));
+            	buf.append(VinciUtils.fromJava(text));
         	}
         	return GrammarTree.getConstString(buf);
         }

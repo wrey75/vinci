@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.nio.charset.Charset;
 
 import com.oxande.vinci.grammar.GrammarTree;
@@ -101,6 +100,9 @@ public class VinciVirtualMachine implements Runnable {
 	public void run() {
 		this.mode = RUNNING;
 		VinciVariable var = execute(this.code, this.state);
+		if( var != null ){
+			println(var);
+		}
 		this.exitCode = 0;
 	}
 
@@ -167,9 +169,9 @@ public class VinciVirtualMachine implements Runnable {
 				var = VinciVariable.fromFloat(var1.intValue());
 				break;
 			case PRINTLN:
-				var = execute((GrammarTree) tree.getValue(), state);
+				var0 = execute((GrammarTree) tree.getValue(), state);
 				// Returns the value but print it first.
-				println(var);
+				println(var0);
 				break;
 				
 			case BOOLEAN_NOT:
