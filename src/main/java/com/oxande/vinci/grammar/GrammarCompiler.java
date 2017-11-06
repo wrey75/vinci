@@ -1,9 +1,6 @@
 package com.oxande.vinci.grammar;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -12,6 +9,7 @@ import com.oxande.vinci.antlr4.VinciBaseVisitor;
 import com.oxande.vinci.antlr4.VinciParser;
 import com.oxande.vinci.antlr4.VinciParser.CompilationUnitContext;
 import com.oxande.vinci.util.Assert;
+import com.oxande.vinci.util.VinciUtils;
 
 public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
 
@@ -54,8 +52,9 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
     		// Not a double...
     	}
     	
-   		BigDecimal dec = new BigDecimal(str);
-   		return GrammarTree.getConstNumeric(dec);
+    	throw new NumberFormatException("Unexpected numeric value " + VinciUtils.quote(str));
+   		// BigDecimal dec = new BigDecimal(str);
+   		// return GrammarTree.getConstNumeric(dec);
     }
     
 
@@ -70,50 +69,56 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
     	}
     	return addExpr;
     }
+    
+    private GrammarTree compare(Token op, GrammarTree expr1, GrammarTree expr2){
+		GrammarTree results = null;
+    	GrammarTree[] cast = GrammarTree.castNumeric(expr1, expr2);
+		String oper = (op == null ? "==" : op.getText());
+		switch(oper){
+			case "<" :
+				results = new GrammarTree(OpCode.BELOW, cast[0], cast[1]);
+				break;
+			case "<=" :
+				results = new GrammarTree(OpCode.BELOW_OR_EQUALS, cast[0], cast[1]);
+				break;
+			case ">" :
+				results = new GrammarTree(OpCode.BOOLEAN_NOT,
+						new GrammarTree(OpCode.BELOW_OR_EQUALS, cast[0], cast[1]));
+				break;
+			case ">=" :
+				results = new GrammarTree(OpCode.BOOLEAN_NOT,
+						new GrammarTree(OpCode.BELOW, cast[0], cast[1]));
+				break;
+			case "==" :
+				results = new GrammarTree(OpCode.EQUALS, cast[0], cast[1]);
+				break;
+				
+			case "!=" :
+				results = new GrammarTree(OpCode.BOOLEAN_NOT,
+						new GrammarTree(OpCode.EQUALS, cast[0], cast[1]));
+				break;
+		}
+		return results;
+    }
 	
     @Override
     public GrammarTree visitRelationalExpression(VinciParser.RelationalExpressionContext ctx) { 
     	GrammarTree shiftExpr = visitShiftExpression(ctx.shiftExpression());
     	if( ctx.relationalExpression() != null ){
     		GrammarTree relExpr = visitRelationalExpression(ctx.relationalExpression());
-    		GrammarTree[] cast = GrammarTree.castNumeric(relExpr, shiftExpr);
-    		String oper = ctx.op.getText();
-    		GrammarTree results = null;
-    		switch(oper){
-    			case "<" :
-    				results = new GrammarTree(OpCode.BELOW, cast[0], cast[1]);
-    				break;
-    			case "<=" :
-    				results = new GrammarTree(OpCode.BELOW_OR_EQUALS, cast[0], cast[1]);
-    				break;
-    			case ">" :
-    				results = new GrammarTree(OpCode.BOOLEAN_NOT,
-    						new GrammarTree(OpCode.BELOW_OR_EQUALS, cast[0], cast[1]));
-    				break;
-    			case ">=" :
-    				results = new GrammarTree(OpCode.BOOLEAN_NOT,
-    						new GrammarTree(OpCode.BELOW, cast[0], cast[1]));
-    				break;
-    		}
-    		return results;
+    		return compare(ctx.op, relExpr, shiftExpr);
     	}
     	return shiftExpr;
     }
     
     @Override 
     public GrammarTree visitEqualityExpression(VinciParser.EqualityExpressionContext ctx) { 
-    	GrammarTree rel = visitRelationalExpression(ctx.relationalExpression());
+    	GrammarTree relExpr = visitRelationalExpression(ctx.relationalExpression());
     	if( ctx.equalityExpression() != null ){
-    		GrammarTree eq = visitEqualityExpression(ctx.equalityExpression());
-    		GrammarTree[] cast = GrammarTree.castNumeric(eq, rel);
-    		GrammarTree equals = new GrammarTree(OpCode.EQUALS, cast[0], cast[1]);
-    		String oper = ctx.op.getText();
-    		if(oper.equals("!=")){
-    			return new GrammarTree(OpCode.BOOLEAN_NOT, equals);
-    		}
-    		return equals;
+    		GrammarTree eqExpr = visitEqualityExpression(ctx.equalityExpression());
+    		return compare(ctx.op, eqExpr, relExpr);
     	}
-    	return rel;
+    	return relExpr;
     }
 	
     @Override 

@@ -1,7 +1,5 @@
 package com.oxande.vinci;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
 public class ArithmeticTest extends AbstractRunner {
@@ -27,13 +25,23 @@ public class ArithmeticTest extends AbstractRunner {
         check( "1.25", basicRun("println 0.125 * 10.0 ;"));
         check( "1.0", basicRun("println 0.1 * 10 ;"));
         check( "35.875", basicRun("println 5.125 * 7 ;"));
+        
+        // Due to rounding issue, use native value
+        check( String.valueOf(5.1*7.0), basicRun("println 5.1 * 7;"));
     }
     
     @Test
-    public void divideTest() throws Exception {
-        check( "0.5", basicRun("println 1 /2;"));
+    public void integerDivideTest() throws Exception {
+    	// Division with 2 integers gives back an integer (same as JAVA and C).
+        check( "0", basicRun("println 1 /2;"));
+        check( "1", basicRun("println 9 / 8;"));
+    }
+    
+    @Test
+    public void floatDivideTest() throws Exception {
         check( "5.5", basicRun("println 5.5 / 1;"));
-        check( "0.25", basicRun("println 2 / 8;"));
+        check( "0.5", basicRun("println 1.0 /2;"));
+        check( "1.125", basicRun("println 9 / 8.0;"));
     }
     
     @Test

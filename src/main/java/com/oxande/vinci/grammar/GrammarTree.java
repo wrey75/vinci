@@ -1,11 +1,7 @@
 package com.oxande.vinci.grammar;
 
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 /**
  * The grammar tree is the compilation tree. The grammar tree can be interpreted or directly assembled as virtual machine code or in any language.
@@ -128,9 +124,9 @@ public class GrammarTree {
 //        return new GrammarTree(OpCode.CONSTANT, VinciClass.INT64, (Long)v );
 //    }
 
-    public static final GrammarTree getConstNumeric(BigDecimal v) {
-        return new GrammarTree(OpCode.CONSTANT, VinciClass.NUMERIC, v );
-    }
+//    public static final GrammarTree getConstNumeric(BigDecimal v) {
+//        return new GrammarTree(OpCode.CONSTANT, VinciClass.NUMERIC, v );
+//    }
     
     public static final GrammarTree getConstFloat(double v) {
         return new GrammarTree(OpCode.CONSTANT, VinciClass.FLOAT, v );
@@ -180,7 +176,7 @@ public class GrammarTree {
     }
 
     public boolean isNumeric(){
-        return this.type == VinciClass.INTEGER || this.type == VinciClass.FLOAT;
+        return this.type == VinciClass.INTEGER || this.type == VinciClass.FLOAT /* || this.type == VinciClass.NUMERIC */;
     }
 
     public static final GrammarTree[] castNumeric(GrammarTree ... operands ) throws ClassCastException {
@@ -189,9 +185,9 @@ public class GrammarTree {
         VinciClass dest = VinciClass.INTEGER;
         for(int i = 0; i < operands.length; i++ ){
             // All operands must be numeric
-            if( !operands[i].isNumeric() ){
-                throw new ClassCastException("At least one of the operands is NOT numeric");
-            }
+//            if( !operands[i].isNumeric() ){
+//                throw new ClassCastException("At least one of the operands is NOT numeric");
+//            }
 
             if( operands[i].type.ordinal() > dest.ordinal() ){
                 dest = operands[i].type;

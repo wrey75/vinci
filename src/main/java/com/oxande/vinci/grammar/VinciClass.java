@@ -6,7 +6,7 @@ public enum VinciClass {
     INTEGER, // 32 bits
     // INT64, // 64 bits
     FLOAT, // double
-    NUMERIC, // Big Decimals
+//    NUMERIC, // Big Decimals
     
     VOID, // No type
     OBJECT, // Object

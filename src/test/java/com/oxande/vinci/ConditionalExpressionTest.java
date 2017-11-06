@@ -26,5 +26,12 @@ public class ConditionalExpressionTest extends AbstractRunner {
         check( "true", basicRun("println 6 > 5.0;"));
     }
     
-    
+    @Test
+    public void compareString() throws Exception {
+        check( "true", basicRun("println \"chat\" < \"chien\";"));
+        check( "false", basicRun("println \"chat\" < \"chat\";"));
+        check( "false", basicRun("println \"chat\" > \"chat\";"));
+        check( "true", basicRun("println \"chat\" == \"chat\";"));
+        check( "true", basicRun("println \"chat\" != \"Chat\";"));
+    }  
 }

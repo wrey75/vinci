@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Tes of the VinciUtils library
+ * Test of the VinciUtils library
  */
 public class VinciUtilsTest {
 
