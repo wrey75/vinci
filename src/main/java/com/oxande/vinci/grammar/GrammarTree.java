@@ -209,10 +209,23 @@ public class GrammarTree {
         return type;
     }
 
+    /**
+     * Reset the coverage of this part of code.
+     * 
+     */
     public void resetCoverage(){
-
+    	for(Object v : values ){
+    		if( GrammarTree.class.isAssignableFrom(v.getClass())){
+    			((GrammarTree)v).resetCoverage();
+    		}
+    	}
+    	this.coverage = 0;
     }
 
+    /**
+     * We just covered this part of the code. Just mark it.
+     * 
+     */
     public void covered(){
         this.coverage++;
     }
