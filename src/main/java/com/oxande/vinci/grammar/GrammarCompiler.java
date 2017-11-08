@@ -1,6 +1,8 @@
 package com.oxande.vinci.grammar;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -13,6 +15,7 @@ import com.oxande.vinci.util.VinciUtils;
 public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
 
     private int line;
+    private Map<String, VinciVariable> variables = new HashMap<>();
 
     
     public GrammarTree compileProgram(VinciParser parser){
@@ -178,7 +181,26 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
         return v;
     }
 
-
+    /**
+     * Create a variable if needed.
+     * 
+     * @param v the grammar concerned.
+     */
+    private GrammarTree createVariableIfNeeded(GrammarTree v, VinciClass type ){
+    	String varName = v.getValue().toString();
+    	VinciVariable var = variables.get(varName);
+    	if( var == null ){
+        	if( v.type == VinciClass.AUTO ){
+        		// Set the type to the correct one.
+        		v.type = type;
+        	}
+        	var = new VinciVariable(varName, v.type);
+        	variables.put(varName, var);
+    	}
+    	v.cast(var.getType(), false);
+    	return v;
+    }
+    
     public GrammarTree visitAssignmentExpression(VinciParser.AssignmentExpressionContext ctx) {
         if( ctx.conditionalExpression() != null ){
             GrammarTree results = visitConditionalExpression(ctx.conditionalExpression());
@@ -190,7 +212,12 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
         if( ctx.unaryExpression() != null ){
         	GrammarTree lvalue = visitUnaryExpression(ctx.unaryExpression());
         	GrammarTree expr = visitAssignmentExpression(ctx.assignmentExpression());
-        	throw new UnsupportedOperationException("AssignmentExpression: assignment '=' not supported.");
+        	
+        	if( lvalue.opCode != OpCode.REFERENCE ){
+        		throw new UnsupportedOperationException("AssignmentExpression: assignment '=' not supported (variable expected).");
+        	}
+        	lvalue = createVariableIfNeeded(lvalue, expr.type);
+        	return new GrammarTree(OpCode.STORE, lvalue, expr);
         }
         throw new UnsupportedOperationException("AssignmentExpression: not fully supported.");
     }
@@ -201,6 +228,24 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
         }
         throw new UnsupportedOperationException("Expression: not fully supported.");
     }
+    
+	/**
+	 * Declare a variable in the tree.
+	 * 
+	 * @param name
+	 *            the name of the variable.
+	 * @return the variable reference.
+	 */
+	public GrammarTree variable(String name) {
+		VinciVariable var = variables.get(name);
+		if( var == null ){
+			GrammarTree tree = new GrammarTree(OpCode.REFERENCE, VinciClass.AUTO);
+			tree.setObject(name);
+			return tree;
+		}
+		return new GrammarTree(OpCode.REFERENCE, var.getType(), var.getName() );
+	}
+	
 
     public GrammarTree visitPrimaryExpression(VinciParser.PrimaryExpressionContext ctx) {
         if( ctx.Constant() != null ){
@@ -209,6 +254,10 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
         }
         if( ctx.expression() != null ){
             return visitExpression(ctx.expression());
+        }
+        if( ctx.Identifier() != null && ctx.Identifier().getText().length() > 0){
+            String identifier = ctx.Identifier().getText();
+            return variable(identifier);
         }
         if( ctx.StringLiteral() != null ){
         	StringBuilder buf = new StringBuilder();
@@ -237,7 +286,7 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
             return visitPostfixExpression(ctx.postfixExpression());
         }
 
-        if( ctx.unaryOperator() != null ){
+        if( ctx.castExpression() != null ){
             GrammarTree v = visitCastExpression(ctx.castExpression());
             char operator = ctx.unaryOperator().getText().charAt(0);
             switch( operator ){

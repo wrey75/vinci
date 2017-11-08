@@ -2,6 +2,8 @@ package com.oxande.vinci.grammar;
 
 public enum OpCode {
     CONSTANT, // Load a constant. Note the type must be defined.
+    REFERENCE, // A reference to a variable
+    
     CAST_INT_TO_FLOAT,
     CAST_FLOAT_TO_INT,
     NOP, // No operation
@@ -29,11 +31,11 @@ public enum OpCode {
     
     // Storage
     STORE,
-    LOAD,
-    STORE_ARRAY, // Array (with index
-    LOAD_ARRAY, // Array (with index
-    STORE_KEY, // Direct access to maps
-    LOAD_KEY, // Direct access to maps
+//    LOAD,
+//    STORE_ARRAY, // Array (with index
+//    LOAD_ARRAY, // Array (with index
+//    STORE_KEY, // Direct access to maps
+//    LOAD_KEY, // Direct access to maps
 
     // Blocks
     BLOCK_OF_STATEMENTS, // A simple list of several statements to follow one by one

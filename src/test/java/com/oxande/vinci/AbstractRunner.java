@@ -3,14 +3,9 @@ package com.oxande.vinci;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
-import org.junit.Assert;
 
 public abstract class AbstractRunner {
 

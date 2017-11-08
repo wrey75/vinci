@@ -2,41 +2,64 @@ package com.oxande.vinci.vm;
 
 import com.oxande.vinci.grammar.VinciClass;
 import com.oxande.vinci.util.Assert;
+import com.oxande.vinci.util.VinciUtils;
 
-public class VinciVariable {
+public class VinciValue {
     private String stringValue;
     private boolean boolValue;
     private double floatValue;
     private int intValue;
-//    private BigDecimal numericValue;
     VinciClass type;
+    private String varName = null;
 
-    private VinciVariable(VinciClass type){
+    public VinciValue(VinciClass type){
     	this.type = type;
     }
     
-    public static VinciVariable fromString(CharSequence v){
-    	VinciVariable self = new VinciVariable(VinciClass.STRING);
+    /**
+     * In case this value is a variable.
+     * 
+     */
+    public String getName(){
+    	return varName;
+    }
+    
+    
+    public void setName(String name){
+    	varName = name;
+    }
+    
+    public void copyValue(VinciValue v){
+    	Assert.equals(v.type, this.type);
+    	this.stringValue = v.stringValue;
+    	this.floatValue = v.floatValue;
+    	this.intValue = v.intValue;
+    	this.boolValue = v.boolValue;
+    }
+    
+    
+    public static VinciValue fromString(CharSequence v){
+    	VinciValue self = new VinciValue(VinciClass.STRING);
         self.stringValue = v.toString();
         return self;
     }
     
-    public static VinciVariable fromFloat(double v){
-    	VinciVariable self = new VinciVariable(VinciClass.FLOAT);
+    public static VinciValue fromFloat(double v){
+    	VinciValue self = new VinciValue(VinciClass.FLOAT);
         self.floatValue = v;
         self.stringValue = Double.toString(v);
         return self;
     }
 
-    public static VinciVariable fromInteger(int v){
-    	VinciVariable self = new VinciVariable(VinciClass.INTEGER);
+    public static VinciValue fromInteger(int v){
+    	VinciValue self = new VinciValue(VinciClass.INTEGER);
         self.intValue = v;
         self.stringValue = Integer.toString(v);
         return self;
     }
     
-    public static VinciVariable fromBoolean(boolean v){
-    	VinciVariable self = new VinciVariable(VinciClass.BOOLEAN);
+    public static VinciValue fromBoolean(boolean v){
+    	VinciValue self = new VinciValue(VinciClass.BOOLEAN);
         self.boolValue = v;
         self.stringValue = Boolean.toString(v);
         return self;
@@ -67,7 +90,7 @@ public class VinciVariable {
         return intValue;
     }
     
-    public VinciVariable add(VinciVariable other){
+    public VinciValue add(VinciValue other){
     	Assert.notNull(other, "other");
     	if( this.type != other.type ){
     		throw new UnsupportedOperationException("Trying add between " + this.type + " and " + other.type + " (expected the same types).");
@@ -89,7 +112,7 @@ public class VinciVariable {
 		throw new UnsupportedOperationException("Addition is not supported for type " + this.type);
     }
 
-    public VinciVariable multiply(VinciVariable other){
+    public VinciValue multiply(VinciValue other){
     	Assert.notNull(other, "other");
     	if( this.type != other.type ){
     		throw new UnsupportedOperationException("Trying multiplication between " + this.type + " and " + other.type + " (expected the same types).");
@@ -112,7 +135,7 @@ public class VinciVariable {
 		throw new UnsupportedOperationException("Multiplication is not supported for type " + this.type);
     }
     
-    public VinciVariable divide(VinciVariable other){
+    public VinciValue divide(VinciValue other){
     	Assert.notNull(other, "other");
     	if( this.type != other.type ){
     		throw new UnsupportedOperationException("Trying division between " + this.type + " and " + other.type + " (expected the same types).");
@@ -135,7 +158,7 @@ public class VinciVariable {
     }
     
     
-    public int compare( VinciVariable other ){
+    public int compare( VinciValue other ){
     	Assert.notNull(other, "other");
     	if( this.type != other.type ){
     		throw new UnsupportedOperationException("Trying compare between " + this.type + " and " + other.type + " (expected the same types).");
@@ -159,8 +182,16 @@ public class VinciVariable {
 		throw new UnsupportedOperationException("Not supported for type " + this.type);
     }
     
+    /**
+     * The value expressed as a {@link String}.
+     * 
+     * @return the value in the form of a {@link String}. Can be null.
+     */
+    public String value(){
+    	return stringValue;
+    }
     
     public String toString(){
-    	return this.stringValue;
+    	return (this.varName == null ? "_const_" : varName) + " (" + this.type.name().toLowerCase() + ") = " + VinciUtils.quote(this.value());
     }
 }

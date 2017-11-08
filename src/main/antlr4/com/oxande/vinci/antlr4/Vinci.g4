@@ -79,13 +79,13 @@ argumentExpressionList
 
 unaryExpression
     :   postfixExpression
-    |   '++' unaryExpression
-    |   '--' unaryExpression
+    |   op='++' unaryExpression
+    |   op='--' unaryExpression
     |   unaryOperator castExpression
-    |   'sizeof' unaryExpression
-    |   'sizeof' '(' typeName ')'
+//    |   'sizeof' unaryExpression
+//    |   'sizeof' '(' typeName ')'
 //    |   '_Alignof' '(' typeName ')'
-    |   '&&' Identifier // GCC extension address of label
+//    |   '&&' Identifier // GCC extension address of label
     ;
 
 // for C langugae, the operators '&' and '*' must be added for pointers
@@ -661,7 +661,7 @@ Identifier
     :   [\p{Lu}\p{Ll}\p{Lt}\p{Lm}]
         (   [\p{L}] // modified letters (accents) accepted
         |   Digit
-        |   '\'' // Prime accepted
+//        |   '\'' // Prime accepted
         |   '_' // Underscore accepted (but not "-" to avoid issues with substraction)
         )*
     ;

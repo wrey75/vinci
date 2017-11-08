@@ -17,7 +17,7 @@ public class VinciVirtualMachine implements Runnable {
 	public static final int RUNNING = 1;
 	public static final int HALTED = 2;
 
-	int ip; // Instrction pointer
+	int ip; // Instruction pointer
 
 	boolean autoFlush = true;
 	PrintStream out;
@@ -79,8 +79,8 @@ public class VinciVirtualMachine implements Runnable {
 		this.err = new PrintStream(out, this.autoFlush, encoding);
 	}
 
-	protected void println(VinciVariable v) {
-		this.out.println(v.toString());
+	protected void println(VinciValue v) {
+		this.out.println(v.value());
 	}
 
 	/**
@@ -99,19 +99,20 @@ public class VinciVirtualMachine implements Runnable {
 	@Override
 	public void run() {
 		this.mode = RUNNING;
-		VinciVariable var = execute(this.code, this.state);
+		VinciValue var = execute(this.code, this.state);
 		if( var != null ){
 			println(var);
 		}
 		this.exitCode = 0;
 	}
 
-	public VinciVariable execute(GrammarTree tree, VinciState state) {
+	public VinciValue execute(GrammarTree tree, VinciState state) {
 		GrammarTree op0, op1, op2;
-		VinciVariable var0, var1, var2;
+		VinciValue var0, var1, var2;
+		String varName;
 		int n;
 
-		VinciVariable var = null;
+		VinciValue var = null;
 		switch (tree.getOpCode()) {
 			case ADD:
 				var1 = execute((GrammarTree) tree.getOperand(0), state);
@@ -132,31 +133,31 @@ public class VinciVirtualMachine implements Runnable {
 			case EQUALS:
 				var1 = execute((GrammarTree) tree.getOperand(0), state);
 				var2 = execute((GrammarTree) tree.getOperand(1), state);
-				var = VinciVariable.fromBoolean(var1.compare(var2) == 0);
+				var = VinciValue.fromBoolean(var1.compare(var2) == 0);
 				break;
 
 			case BELOW:
 				var1 = execute((GrammarTree) tree.getOperand(0), state);
 				var2 = execute((GrammarTree) tree.getOperand(1), state);
-				var = VinciVariable.fromBoolean(var1.compare(var2) < 0);
+				var = VinciValue.fromBoolean(var1.compare(var2) < 0);
 				break;
 
 			case BELOW_OR_EQUALS:
 				var1 = execute((GrammarTree) tree.getOperand(0), state);
 				var2 = execute((GrammarTree) tree.getOperand(1), state);
-				var = VinciVariable.fromBoolean(var1.compare(var2) <= 0);
+				var = VinciValue.fromBoolean(var1.compare(var2) <= 0);
 				break;
 
 			case CONSTANT:
 				switch (tree.getType()) {
 					case INTEGER:
-						var = VinciVariable.fromInteger((int) tree.getValue());
+						var = VinciValue.fromInteger((int) tree.getValue());
 						break;
 					case FLOAT:
-						var = VinciVariable.fromFloat((double) tree.getValue());
+						var = VinciValue.fromFloat((double) tree.getValue());
 						break;
 					case STRING:
-						var = VinciVariable.fromString((CharSequence)tree.getValue());
+						var = VinciValue.fromString((CharSequence)tree.getValue());
 						break;
 					default:
 						throw new UnsupportedOperationException(
@@ -166,7 +167,7 @@ public class VinciVirtualMachine implements Runnable {
 
 			case CAST_INT_TO_FLOAT:
 				var1 = execute((GrammarTree) tree.getOperand(0), state);
-				var = VinciVariable.fromFloat(var1.intValue());
+				var = VinciValue.fromFloat(var1.intValue());
 				break;
 			case PRINTLN:
 				var0 = execute((GrammarTree) tree.getValue(), state);
@@ -176,7 +177,7 @@ public class VinciVirtualMachine implements Runnable {
 				
 			case BOOLEAN_NOT:
 				var1 = execute((GrammarTree) tree.getValue(), state);
-				var = VinciVariable.fromBoolean(!var1.booleanValue());
+				var = VinciValue.fromBoolean(!var1.booleanValue());
 				break;
 
 			case BLOCK_OF_STATEMENTS:
@@ -185,6 +186,17 @@ public class VinciVirtualMachine implements Runnable {
 					var = execute((GrammarTree) tree.getOperand(i), state);
 				}
 				break;
+				
+			case REFERENCE:
+				var = state.getVariable(tree);
+				break;
+				
+			case STORE:
+				var1 = execute((GrammarTree) tree.getOperand(0), state);
+				var2 = execute((GrammarTree) tree.getOperand(1), state);
+				var = state.putValue(var1.getName(), var2);
+				break;
+				
 			default:
 				throw new UnsupportedOperationException("Operation code " + tree.getOpCode() + " not supported.");
 		}
