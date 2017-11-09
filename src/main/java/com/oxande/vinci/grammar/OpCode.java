@@ -10,6 +10,7 @@ public enum OpCode {
     PRINTLN, // To print something
 
     // Operators
+    STRING_MULTIPLY, // to multiply a string (for adding and other)
     MULTIPLY,
     DIVIDE,
     ADD,

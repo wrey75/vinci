@@ -119,11 +119,19 @@ public class VinciVirtualMachine implements Runnable {
 				var2 = execute((GrammarTree) tree.getOperand(1), state);
 				var = var1.add(var2);
 				break;
+			
+			case STRING_MULTIPLY:
+				var1 = execute((GrammarTree) tree.getOperand(0), state);
+				var2 = execute((GrammarTree) tree.getOperand(1), state);
+				var = var1.string_multiply(var2);
+				break;
+				
 			case MULTIPLY:
 				var1 = execute((GrammarTree) tree.getOperand(0), state);
 				var2 = execute((GrammarTree) tree.getOperand(1), state);
 				var = var1.multiply(var2);
 				break;
+				
 			case DIVIDE:
 				var1 = execute((GrammarTree) tree.getOperand(0), state);
 				var2 = execute((GrammarTree) tree.getOperand(1), state);

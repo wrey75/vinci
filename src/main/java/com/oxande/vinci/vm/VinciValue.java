@@ -104,16 +104,40 @@ public class VinciValue {
     			double sum = this.floatValue + other.floatValue;
     			return fromFloat(sum);
     		}
-//    		case NUMERIC:
-//    			VinciVariable var = new VinciVariable(VinciClass.NUMERIC);
-//    			var.numericValue = this.numericValue.add(other.numericValue);
-//    			return var;
+    		case STRING: {
+    			String concat = this.stringValue + other.stringValue;
+    			return fromString(concat);
+    		}
     	}
 		throw new UnsupportedOperationException("Addition is not supported for type " + this.type);
     }
 
+    /**
+     * There is something special in the language: you can multiply a {@link VinciClass#STRING}
+     * by a {@link VinciClass#INTEGER} and you will obtain the needed string (this is useful for adding some padding).
+     * 
+     */
+    public VinciValue string_multiply(VinciValue other){
+		// Multiply a String by an integer.
+		Assert.isTrue( this.type.equals(VinciClass.STRING) );
+		Assert.isTrue( other.type.equals(VinciClass.INTEGER));
+		
+		StringBuilder buf = new StringBuilder();
+		for(int i = 0; i < other.intValue; i++){
+			buf.append(this.stringValue);
+		}
+		return fromString(buf);
+    }
+	
+    /**
+     * Multiply 2 values. 
+     * 
+     * @param other the multiplier. Must be of the same type than the original (in many cases)
+     * @return a new value.
+     */
     public VinciValue multiply(VinciValue other){
     	Assert.notNull(other, "other");
+    	
     	if( this.type != other.type ){
     		throw new UnsupportedOperationException("Trying multiplication between " + this.type + " and " + other.type + " (expected the same types).");
     	}

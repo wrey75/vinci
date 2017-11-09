@@ -25,9 +25,10 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
 
     // ----------------------- UTILITIES
     
-    private GrammarTree multiplyMinusOne(GrammarTree src){
+    private GrammarTree multiplyMinusOne(GrammarTree src) {
         GrammarTree minus1 = GrammarTree.getConstInteger(-1);
-        GrammarTree[] ops = GrammarTree.castNumeric( minus1, src );
+        GrammarTree[] ops;
+		ops = GrammarTree.castNumeric( minus1, src );
         return new GrammarTree(OpCode.MULTIPLY, ops);
     }
     
@@ -72,7 +73,7 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
     	return addExpr;
     }
     
-    private GrammarTree compare(Token op, GrammarTree expr1, GrammarTree expr2){
+    private GrammarTree compare(Token op, GrammarTree expr1, GrammarTree expr2) {
 		GrammarTree results = null;
     	GrammarTree[] cast = GrammarTree.castNumeric(expr1, expr2);
 		String oper = (op == null ? "==" : op.getText());
@@ -319,6 +320,11 @@ public class GrammarCompiler extends VinciBaseVisitor<GrammarTree> {
         GrammarTree b = visitCastExpression(ctx.castExpression());
         switch( operator ){
         case '*' :
+        	if(a.isString() && b.isInteger()) {
+        		return new GrammarTree(OpCode.STRING_MULTIPLY, 
+        				a.cast(VinciClass.STRING, false), 
+        				b.cast(VinciClass.INTEGER, false));
+        	}
             return new GrammarTree(OpCode.MULTIPLY, GrammarTree.castNumeric(a, b));
         case '/':
             return new GrammarTree(OpCode.DIVIDE, GrammarTree.castNumeric(a, b));

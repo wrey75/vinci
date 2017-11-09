@@ -3,6 +3,8 @@ package com.oxande.vinci.grammar;
 import java.util.List;
 import java.util.Objects;
 
+import org.antlr.v4.runtime.misc.ParseCancellationException;
+
 /**
  * The grammar tree is the compilation tree. The grammar tree can be interpreted
  * or directly assembled as virtual machine code or in any language.
@@ -52,8 +54,8 @@ public class GrammarTree {
 	// this.opCode = code;
 	// addGrammars();
 	// }
-
-	private void addGrammars(GrammarTree objects[]) {
+	
+	private void add_grammars(GrammarTree objects[], boolean relaxed) {
 		if (objects.length == 0) {
 			throw new IllegalArgumentException("At least one object is required!");
 		}
@@ -61,7 +63,7 @@ public class GrammarTree {
 		GrammarTree first = objects[0];
 		this.type = first.type;
 		for (int i = 0; i < objects.length; i++) {
-			if (this.type != objects[i].type) {
+			if (this.type != objects[i].type && !relaxed) {
 				throw new IllegalArgumentException("The object " + objects[i] + " must have the type " + first.type
 						+ " (not " + objects[i].type + ").");
 			}
@@ -69,10 +71,32 @@ public class GrammarTree {
 		}
 	}
 
+	private void addGrammars(GrammarTree ...objects ) {
+		add_grammars(objects, false);
+	}
+
+	private void addRelaxedGrammars(GrammarTree ...objects ) {
+		add_grammars(objects, true);
+	}
+	
+	/**
+	 * Create a concatenation of grammars.
+	 * 
+	 * @param code the {@link OpCode}
+	 * @param objects the objects
+	 */
 	public GrammarTree(OpCode code, GrammarTree... objects) {
 		this();
 		this.opCode = code;
-		addGrammars(objects);
+		switch( code ){
+			case STRING_MULTIPLY:
+				addRelaxedGrammars(objects);
+				break;
+				
+			default:
+				addGrammars(objects);
+		}
+
 	}
 
 	/**
@@ -141,7 +165,7 @@ public class GrammarTree {
 	 *            if the conversion is explicit (used to convert floats to int)
 	 * @return The convered value (can be the same or a new one).
 	 */
-	public final GrammarTree cast(VinciClass dest, boolean explicit) throws ClassCastException {
+	public final GrammarTree cast(VinciClass dest, boolean explicit) {
 		if (dest.equals(type)) {
 			// Very simple case
 			return this;
@@ -167,7 +191,7 @@ public class GrammarTree {
 			break;
 
 		default:
-			throw new ClassCastException("No cast available to " + dest);
+			throw new ParseCancellationException("A number was expected, but a " + dest + " has been found.");
 		}
 
 		throw new ClassCastException("Can not cast from " + this.type + " to " + dest);
@@ -175,13 +199,18 @@ public class GrammarTree {
 
 	public boolean isNumeric() {
 		return this.type == VinciClass.INTEGER
-				|| this.type == VinciClass.FLOAT /*
-													 * || this.type ==
-													 * VinciClass.NUMERIC
-													 */;
+				|| this.type == VinciClass.FLOAT;
 	}
 
-	public static final GrammarTree[] castNumeric(GrammarTree... operands) throws ClassCastException {
+	public boolean isString() {
+		return this.type == VinciClass.STRING;
+	}
+	
+	public boolean isInteger() {
+		return this.type == VinciClass.INTEGER;
+	}
+	
+	public static final GrammarTree[] castNumeric(GrammarTree... operands) {
 		VinciClass[] checks = new VinciClass[operands.length];
 		GrammarTree[] ret = new GrammarTree[operands.length];
 		VinciClass dest = VinciClass.INTEGER;
